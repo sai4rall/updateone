@@ -1,5 +1,5 @@
 
-package com.telstra.udmf.quoll;
+package com.t.u.q;
 
 
 import com.amazonaws.regions.Regions;
