@@ -1,0 +1,119 @@
+
+[
+{
+"$type": "ocw/gsmCell",
+"dynamicAttributes": [
+{
+"groupName": "telstraCellAttributes",
+"attributeName": "billingName",
+"attributeValue": "Windsor"
+},
+{
+"groupName": "telstraCellAttributes",
+"attributeName": "roamingAgreement",
+"attributeValue": "HTW"
+},
+{
+"groupName": "telstraCellAttributes",
+"attributeName": "cellFunction",
+"attributeValue": "Coverage"
+},
+{
+"groupName": "telstraCellAttributes",
+"attributeName": "coverageClassification",
+"attributeValue": "Unassigned"
+},
+{
+"groupName": "telstraCellAttributes",
+"attributeName": "coverageStatement",
+"attributeValue": "Coverage of the Windsor area"
+},
+{
+"groupName": "telstraCellAttributes",
+"attributeName": "hasPriorityAssistCustomers",
+"attributeValue": false
+},
+{
+"groupName": "telstraCellAttributes",
+"attributeName": "hasWirelessLocalLoopCustomers",
+"attributeValue": false
+},
+{
+"groupName": "telstraCellAttributes",
+"attributeName": "wirelessServiceOwner",
+"attributeValue": "TCW - SYDNEY NOR EAST & CBD"
+},
+{
+"groupName": "telstraCellAttributes",
+"attributeName": "hasSpecialEvent",
+"attributeValue": false
+},
+{
+"groupName": "telstraCellAttributes",
+"attributeName": "hasSignificantSpecialEvent",
+"attributeValue": false
+},
+{
+"groupName": "telstraCellAttributes",
+"attributeName": "mobileSwitchingCentre",
+"attributeValue": "NSW-ACT-MSCPOOL"
+},
+{
+"groupName": "telstraCellAttributes",
+"attributeName": "quollIndex",
+"attributeValue": 25596
+},
+{
+"groupName": "telstraCellAttributes",
+"attributeName": "hasHighSeasonality",
+"attributeValue": false
+},
+{
+"groupName": "telstraGsmCellAttributes",
+"attributeName": "broadcastCode",
+"attributeValue": 622
+},
+{
+"groupName": "telstraGsmCellAttributes",
+"attributeName": "plmn",
+"attributeValue": 50501
+},
+{
+"groupName": "telstraGsmCellAttributes",
+"attributeName": "evdoEnabled",
+"attributeValue": false
+},
+{
+"groupName": "telstraCellAttributes",
+"attributeName": "baseStationName",
+"attributeValue": "WILBERFORCE"
+},
+{
+"groupName": "telstraGsmCellAttributes",
+"attributeName": "gsm338Coding",
+"attributeValue": "D7B49B3C7FCB41"
+}
+],
+"$refId": "XXXX000",
+"$action": "createOrUpdate",
+"name": "XXXX000",
+"status": "DECOMMISSIONED",
+"band": "900 MHz",
+"cellType": "MACRO",
+"sectorNumber": 1,
+"cgi": "50501026029CD",
+"egprsActivated": "YES",
+"gprsActivated": "YES",
+"comments": "NEW 07/10/02, Transfered from KBSA"
+},
+{
+"$type": "ocp/project",
+"$action": "createOrUpdate",
+"$refId": "XXXX000 Quoll Migration",
+"name": "XXXX000 Quoll Migration",
+"projectTypeName": "Migration",
+"$members": ["XXXX000"]
+}
+
+
+]
