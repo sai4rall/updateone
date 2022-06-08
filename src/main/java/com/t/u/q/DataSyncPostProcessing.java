@@ -2,6 +2,9 @@
 package com.t.u.q;
 
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
@@ -14,15 +17,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class DataSyncPostProcessing {
     private static int index=0;
-    private static int MAX_ROWS=2500;
+    private static int MAX_ROWS=400;
 
     private static String accessKey = "";
     private static String accessSecret = "";
@@ -36,6 +36,7 @@ public class DataSyncPostProcessing {
 
     //s3://udmfmigrationdatasource/eai_objects/
     public static void main(String[] args) throws IOException {
+//        buildJobFile("rnc");
         buildJobFile("bsDF");
         buildJobFile("enmDF");
         buildJobFile("mbs_before_transform");
@@ -98,10 +99,10 @@ public class DataSyncPostProcessing {
 
 
     public static AmazonS3 s3Client() {
-// AWSCredentials credentials = new BasicAWSCredentials(accessKey, accessSecret);
+ AWSCredentials credentials = new BasicAWSCredentials(accessKey, accessSecret);
         return AmazonS3ClientBuilder.standard()
-// .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                .withRegion(Regions.AP_SOUTHEAST_2).build();
+ .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                .withRegion(Regions.US_EAST_1).build();
     }
 
     public static void formatDynamicAttributes(String fileName) throws JsonProcessingException {
@@ -110,6 +111,7 @@ public class DataSyncPostProcessing {
 // readFile(tempPath);
         System.out.println("entered dynamic attributes " + fileName);
         StringBuilder json = readFile(tempPath + "_" + fileName + ".json");
+        System.out.println(json);
         ObjectMapper mapper = new ObjectMapper();
         JsonNode jsonNode = mapper.readTree(json.toString());
         ArrayNode resultData = mapper.createArrayNode();
@@ -183,9 +185,10 @@ public class DataSyncPostProcessing {
             chunkFullnode.addAll(createUpdateChunk);
             for (int i = 0; i < createUpdateChunk.size(); i++) {
                 JsonNode jnode = createUpdateChunk.get(i);
-                ArrayNode v = (ArrayNode) jnode.get("$nodeCode");
+                String refdataelement=getRefDataElement(jnode);
+                ArrayNode v = (ArrayNode) jnode.get(refdataelement);
                 for (int j = 0; j < v.size(); j++) {
-                    relMap.put(jnode.get("$refId").textValue(),lookupsData.get(v.get(j)));
+                    relMap.put(v.get(j).textValue(),lookupsData.get(v.get(j).textValue()));
                 }
 
             }
@@ -194,6 +197,19 @@ public class DataSyncPostProcessing {
 //            s3Client().putObject(outputBucketName, outputBucketPath + "objects/" + fileName + ".json", chunkFullnode.toString());
             s3Client().putObject(outputBucketName, outputBucketPath + folder+"/" + fileName +"_"+index+ ".json", chunkFullnode.toString());
         });
+    }
+
+    private static String getRefDataElement(JsonNode jnode) {
+        Iterator<String> fields= jnode.fieldNames();
+        List<String> mlist=Arrays.asList("$type","$action","$refId");
+        String refElement="";
+        while (fields.hasNext()){
+            String field=fields.next();
+            if(field.startsWith("$")&&!mlist.contains(field)){
+                refElement=field;
+            }
+        }
+        return refElement;
     }
 
     private static String getProjectData(ObjectNode jsonNode) throws JsonProcessingException {
@@ -205,7 +221,7 @@ public class DataSyncPostProcessing {
         elementData.put("name", jsonNode.get("name").toString() + " Quoll Migration");
         elementData.put("projectTypeName", "Migration");
         ArrayNode arrayNode = elementData.putArray("$members");
-        arrayNode.add(jsonNode.get("$refid").toString());
+        arrayNode.add(jsonNode.get("$refId").toString());
         return elementData.toString();
     }
 
